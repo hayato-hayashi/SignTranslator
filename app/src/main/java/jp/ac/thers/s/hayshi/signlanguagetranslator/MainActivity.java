@@ -1,5 +1,7 @@
 package jp.ac.thers.s.hayshi.signlanguagetranslator;
 
+import static com.google.mediapipe.tasks.vision.core.RunningMode.LIVE_STREAM;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,17 +10,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mediapipe.tasks.vision.core.RunningMode;
+import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer;
+
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -40,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // 画像を表示するコンポーネント
     private ImageView imageView;
 
+    private Executor modelExecutor = Executors.newSingleThreadExecutor();
+
+    // モデルに対する操作をする変数
+    GestureRecognizerConfig gestureRecognizerConfig;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button takePicture = findViewById(R.id.takePicture);
         takePicture.setOnClickListener(this);
         imageView = findViewById(R.id.imageView);
+        TextView textView = findViewById(R.id.result);
 
         // ProcessCameraProviderのインスタンスを生成する準備をする
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -70,6 +85,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 .setTargetRotation(previewView.getDisplay().getRotation())
                                 .build();
 
+                        // 画像解析をするときの設定する
+                        //ImageAnalyzer : 画像をアプリに提供し、それらの画像に対して機械学習推論を実行する
+                        //setBackpressureStrategy : 前のフレームが処理中に新しいフレームが入力されたときの動作を設定する
+                        //STRATEGY_KEEP_ONLY_LATEST ->  キューをひとつに設定するので新しい画像で前の画像を上書きする
+                        //setTargetAspectRatio : 出力画像のアスペクト比を設定する
+                        //setOutputImageFormat : 出力画像の色形式を設定する
+                        //setTargetRotation : 出力画像を回転して正しい位置で表示する
+                        ImageAnalysis imageAnalyzer = new ImageAnalysis.Builder()
+                                .setTargetAspectRatio(AspectRatio.RATIO_4_3)
+                                .setTargetRotation(previewView.getDisplay().getRotation())
+                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                                .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
+                                .build();
+                        imageAnalyzer.setAnalyzer(modelExecutor, new ImageAnalysis.Analyzer() {
+                            @Override
+                            public void analyze(ImageProxy image) {
+                                gestureRecognizerConfig.recognizeLiveStream(image);
+                            }
+                        });
+
                         // CameraSelectorはカメラの設定をするオブジェクト
                         // 前面カメラの使用はCameraSelector.LENS_FACING_FRONT
                         CameraSelector cameraSelector = new CameraSelector.Builder()
@@ -88,6 +123,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 },      // UIの更新やUI要素へのアクセスはメインスレッドで行う必要がある
                 ContextCompat.getMainExecutor(this));
+
+        modelExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                // モデルの作成
+                gestureRecognizerConfig = new GestureRecognizerConfig(
+                        getApplicationContext(), textView, 0.5f, 0.5f, 0.5f, RunningMode.LIVE_STREAM
+                );
+            }
+        });
+
     }
 
     @Override

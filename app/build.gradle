@@ -38,4 +38,6 @@ dependencies {
     implementation "androidx.camera:camera-view:${camerax_version}"
     // If you want to additionally use the CameraX Lifecycle library
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+
+    implementation 'com.google.mediapipe:tasks-vision:latest.release'
 }
