@@ -1,7 +1,5 @@
 package jp.ac.thers.s.hayshi.signlanguagetranslator;
 
-import static com.google.mediapipe.tasks.vision.core.RunningMode.LIVE_STREAM;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.AspectRatio;
@@ -26,7 +26,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mediapipe.tasks.vision.core.RunningMode;
-import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PreviewView previewView = findViewById(R.id.previewView);
         Button takePicture = findViewById(R.id.takePicture);
         takePicture.setOnClickListener(this);
-        imageView = findViewById(R.id.imageView);
+//        imageView = findViewById(R.id.imageView);
         TextView textView = findViewById(R.id.result);
 
         // ProcessCameraProviderのインスタンスを生成する準備をする
@@ -100,8 +99,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 .build();
                         imageAnalyzer.setAnalyzer(modelExecutor, new ImageAnalysis.Analyzer() {
                             @Override
-                            public void analyze(ImageProxy image) {
+                            public void analyze(@NonNull ImageProxy image) {
                                 gestureRecognizerConfig.recognizeLiveStream(image);
+                                image.close();
                             }
                         });
 
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         //.bindToLifeCycleは指定したライフサイクルに合わせてカメラとプレビューの開始と停止を自動的に処理する
                         // カメラの使用方法を設定している
-                        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture);
+                        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageCapture, imageAnalyzer);
 
                         // previewの出力先をpreviewViewに設定している
                         preview.setSurfaceProvider(previewView.getSurfaceProvider());
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 // モデルの作成
                 gestureRecognizerConfig = new GestureRecognizerConfig(
-                        getApplicationContext(), textView, 0.5f, 0.5f, 0.5f, RunningMode.LIVE_STREAM
+                        getApplicationContext(), textView, MainActivity.this, 0.3f, 0.3f, 0.3f, RunningMode.LIVE_STREAM
                 );
             }
         });

@@ -28,6 +28,7 @@ Live_Stream: リアルタイムで生成される映像を入力
 
 package jp.ac.thers.s.hayshi.signlanguagetranslator;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,23 +40,28 @@ import androidx.camera.core.ImageProxy;
 
 import com.google.mediapipe.framework.image.BitmapImageBuilder;
 import com.google.mediapipe.framework.image.MPImage;
+import com.google.mediapipe.tasks.components.containers.Category;
 import com.google.mediapipe.tasks.core.BaseOptions;
 import com.google.mediapipe.tasks.core.Delegate;
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer;
 import com.google.mediapipe.tasks.vision.core.RunningMode;
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult;
 
+import java.util.List;
+
 public class GestureRecognizerConfig {
     GestureRecognizer gestureRecognizer;
     Context context;
     TextView textView;
 
-    GestureRecognizerConfig(Context context, TextView textView,
+    Activity activity;
+
+    GestureRecognizerConfig(Context context, TextView textView, Activity activity,
             Float minHandDetectionConfidence, Float minHandTrackingConfidence,
             Float minHandPresenceConfidence, RunningMode runningMode
     ) {
-        //
         this.textView = textView;
+        this.activity = activity;
 
         // モデルの大まかな設定
         BaseOptions.Builder baseOptionBuilder = BaseOptions.builder();
@@ -64,7 +70,7 @@ public class GestureRecognizerConfig {
         baseOptionBuilder.setDelegate(Delegate.CPU);
 
         // モデルが存在するパスを記述
-        baseOptionBuilder.setModelAssetPath("C:\\Users\\hayas\\AndroidStudioProjects\\SignLanguageTranslator\\app\\src\\main\\assets\\gesture_recognizer.task");
+        baseOptionBuilder.setModelAssetPath("gesture_recognizer.task");
 
 
         try {
@@ -89,8 +95,6 @@ public class GestureRecognizerConfig {
 
             // モデルの作成
             this.gestureRecognizer = GestureRecognizer.createFromOptions(context, options);
-
-
         } catch(Error e) {
             // エラー処理
             e.printStackTrace();
@@ -155,7 +159,20 @@ public class GestureRecognizerConfig {
         GestureRecognizerResult result,
         MPImage input
     ) {
-        textView.setText(result.gestures().toString());
+        List<List<Category>> gestures = result.gestures();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (List<Category> gestureCategories : gestures) {
+                    for (Category category : gestureCategories) {
+                        // カテゴリ名の取得
+                        String categoryName = category.categoryName();
+                        // カテゴリ名の利用
+                        textView.setText(categoryName);
+                    }
+                }
+            }
+        });
     }
 
     // 識別中にエラーが発生すると実行される
