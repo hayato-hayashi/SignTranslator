@@ -40,4 +40,6 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
 
     implementation 'com.google.mediapipe:tasks-vision:latest.release'
+
+    implementation 'com.theokanning.openai-gpt3-java:client:0.9.0'
 }

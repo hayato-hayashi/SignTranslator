@@ -25,15 +25,21 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mediapipe.tasks.components.containers.Category;
 import com.google.mediapipe.tasks.vision.core.RunningMode;
+import com.theokanning.openai.OpenAiService;
+import com.theokanning.openai.completion.CompletionChoice;
+import com.theokanning.openai.completion.CompletionRequest;
+import com.theokanning.openai.completion.CompletionResult;
 
 import java.io.File;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.core.content.ContextCompat;
-
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // ListenableFutureは非同期操作の結果が格納される。また、その値に対する処理も登録することができる
@@ -62,6 +68,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         takePicture.setOnClickListener(this);
 //        imageView = findViewById(R.id.imageView);
         TextView textView = findViewById(R.id.result);
+        TextView textView2 = findViewById(R.id.chatGPT);
+
+//        ResourceBundle config = ResourceBundle.getBundle("config");
+//
+//        final String token = config.getString("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");
+        final OpenAiService service = new OpenAiService("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");
+
+        System.out.println("\nCreating completion...");
+
+        final String message = "やっぱり、冬の鍋はおいしいですね。";
+        final String prompt = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever.\nHuman: " + message
+                + "\nAI: ";
+
+        final CompletionRequest completionRequest = CompletionRequest.builder()
+                .model("text-davinci-003")
+                .prompt(prompt)
+                .maxTokens(256)
+                .build();
+
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                final CompletionResult completionResult = service.createCompletion(completionRequest);
+//                final List<CompletionChoice> choiceList = completionResult.getChoices();
+//
+//                for (final CompletionChoice choice : choiceList) {
+//                    System.out.println(choice);
+//                }
+//            }
+//        });
+
+
 
         // ProcessCameraProviderのインスタンスを生成する準備をする
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
