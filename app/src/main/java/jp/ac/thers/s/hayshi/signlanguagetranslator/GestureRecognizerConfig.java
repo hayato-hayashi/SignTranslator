@@ -169,6 +169,7 @@ public class GestureRecognizerConfig {
                         String categoryName = category.categoryName();
                         // カテゴリ名の利用
                         textView.setText(categoryName);
+                        System.out.println(categoryName);
                     }
                 }
             }
