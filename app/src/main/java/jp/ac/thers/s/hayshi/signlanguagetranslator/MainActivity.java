@@ -27,10 +27,10 @@ import androidx.camera.view.PreviewView;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mediapipe.tasks.components.containers.Category;
 import com.google.mediapipe.tasks.vision.core.RunningMode;
-import com.theokanning.openai.OpenAiService;
-import com.theokanning.openai.completion.CompletionChoice;
-import com.theokanning.openai.completion.CompletionRequest;
-import com.theokanning.openai.completion.CompletionResult;
+//import com.theokanning.openai.OpenAiService;
+//import com.theokanning.openai.completion.CompletionChoice;
+//import com.theokanning.openai.completion.CompletionRequest;
+//import com.theokanning.openai.completion.CompletionResult;
 
 import java.io.File;
 import java.util.List;
@@ -66,40 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PreviewView previewView = findViewById(R.id.previewView);
         Button takePicture = findViewById(R.id.takePicture);
         takePicture.setOnClickListener(this);
-//        imageView = findViewById(R.id.imageView);
         TextView textView = findViewById(R.id.result);
         TextView textView2 = findViewById(R.id.chatGPT);
-
-//        ResourceBundle config = ResourceBundle.getBundle("config");
-//
-//        final String token = config.getString("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");
-        final OpenAiService service = new OpenAiService("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");
-
-        System.out.println("\nCreating completion...");
-
-        final String message = "やっぱり、冬の鍋はおいしいですね。";
-        final String prompt = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever.\nHuman: " + message
-                + "\nAI: ";
-
-        final CompletionRequest completionRequest = CompletionRequest.builder()
-                .model("text-davinci-003")
-                .prompt(prompt)
-                .maxTokens(256)
-                .build();
-
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                final CompletionResult completionResult = service.createCompletion(completionRequest);
-//                final List<CompletionChoice> choiceList = completionResult.getChoices();
-//
-//                for (final CompletionChoice choice : choiceList) {
-//                    System.out.println(choice);
-//                }
-//            }
-//        });
-
-
 
         // ProcessCameraProviderのインスタンスを生成する準備をする
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -113,14 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // プレビューをするときの設定
                         // .Builder()でプレビューの解像度やアスペクト比、プレビューの回転など設定することができる
                         Preview preview = new Preview.Builder().build();
-
-                        // 画像キャプチャをするときの設定
-                        // 処理(レイテンシ)を早くするモードと画質をよくするモードの2つある
-                        // 写真の回転情報を設定する
-                        imageCapture = new ImageCapture.Builder()
-                                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                                .setTargetRotation(previewView.getDisplay().getRotation())
-                                .build();
 
                         // 画像解析をするときの設定する
                         //ImageAnalyzer : 画像をアプリに提供し、それらの画像に対して機械学習推論を実行する
