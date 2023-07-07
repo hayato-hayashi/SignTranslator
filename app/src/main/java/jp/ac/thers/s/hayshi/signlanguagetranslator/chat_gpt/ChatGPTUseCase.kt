@@ -40,7 +40,8 @@ class ChatGptUseCase @Inject constructor(
             // データを送信
             emit(chat)
         } catch (e: Exception) {
-            System.out.println(e.message.toString())
+            val error = e.message.toString()
+            emit(listOf("error: ", error))
         }
     }
 }

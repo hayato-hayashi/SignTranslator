@@ -32,19 +32,27 @@ class ChatGPTViewModel @Inject constructor(
     private val chatGPTUseCase: ChatGptUseCase
 ) : ViewModel() {
 
-    // chatGPTからの返答を格納して、この値を画面に表示する
-    var content by mutableStateOf<List<String>>(emptyList())
+    // chatGPTからの返答を格納して、この値をTranslationScreenに表示する
+    private var content by mutableStateOf<List<String>>(emptyList())
+
+    // LogScreen画面に表示する内容を格納
+    private var log by mutableStateOf<List<String>>(emptyList())
 
     // chatGPTのモデルを指定
-    var model = "gpt-3.5-turbo"
+    private var model = "gpt-3.5-turbo"
 
     // chatGPTが返答をする際の設定を記述
-    var message = Message(role = "system", content = "正しい日本語に変換してください")
+    private var message = Message(role = "system", content = "正しい日本語に変換してください")
 
     // chatGPTに聞きたい内容をcontentに記述する
-    var message2: Message = Message(role = "user", content = "")
+    private var message2: Message = Message(role = "user", content = "")
+
+    // chatGPTからの返答の状態を表す
+    var isLoading by mutableStateOf(false)
 
     fun chat(message: String) {
+        isLoading = true
+
         // POSTするときのデータの形に変換する
         message2 = Message(role = "user", content = message)
         val chatGPTRequestData = ChatGPTRequestData(model, listOf(this.message, this.message2))
@@ -55,8 +63,24 @@ class ChatGPTViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    // ChatGPTからの返答を1つの文字列に変換して渡す
+    fun getContent(): String {
+        isLoading = false
+        return content.joinToString("")
+    }
+
     // 値の初期化
     fun clear() {
         content = emptyList()
+    }
+
+    // 翻訳結果を格納する
+    fun setContent(content: String) {
+        log = log + content
+    }
+
+    // 今までの翻訳結果を渡す
+    fun getContents(): List<String> {
+        return log
     }
 }
