@@ -36,7 +36,7 @@ class ChatGPTViewModel @Inject constructor(
     private var content by mutableStateOf<List<String>>(emptyList())
 
     // LogScreen画面に表示する内容を格納
-    private var log by mutableStateOf<List<String>>(emptyList())
+    private var log by mutableStateOf<MutableList<String>>(mutableListOf())
 
     // chatGPTのモデルを指定
     private var model = "gpt-3.5-turbo"
@@ -76,11 +76,11 @@ class ChatGPTViewModel @Inject constructor(
 
     // 翻訳結果を格納する
     fun setContent(content: String) {
-        log = log + content
+        log.add(content)
     }
 
     // 今までの翻訳結果を渡す
-    fun getContents(): List<String> {
+    fun getContents(): MutableList<String> {
         return log
     }
 }

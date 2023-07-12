@@ -108,6 +108,11 @@ class MediaPipe(
             imageProxy.width, imageProxy.height, Bitmap.Config.ARGB_8888
         )
 
+        // カメラを一時停止するとサイズが異なるといったエラーがでることがあるのでそのときは関数を終了させる
+        if (bitmapBuffer.width != imageProxy.width || bitmapBuffer.height != imageProxy.height) {
+            return
+        }
+
         // imageProxyに格納されているフレーム画像データをbitmapBufferにコピーした
         imageProxy.use { bitmapBuffer.copyPixelsFromBuffer(imageProxy.planes[0].buffer) }
         imageProxy.close()
@@ -148,5 +153,4 @@ class MediaPipe(
             gestureRecognizer!!.recognizeAsync(mpImage, frameTime)
         }
     }
-
 }

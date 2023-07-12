@@ -14,9 +14,13 @@ Kotlinにはmarginを指定するmodifierがないのでpadding()で代用する
 上のような認識でmarginとpaddingを指定する
 =============================================================*/
 
+/*================================================================
+AndroidViewについて
+https://note.com/masato1230/n/na09514fe5698
+===============================================================*/
 package jp.ac.thers.s.hayshi.signlanguagetranslator.presentation
 
-import android.os.Bundle
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,7 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import jp.ac.thers.s.hayshi.signlanguagetranslator.R
 import jp.ac.thers.s.hayshi.signlanguagetranslator.ScreenRoute
@@ -44,15 +48,15 @@ import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.MediaPipeViewModel
 fun TranslationScreen (
     navController: NavController,
     chatGPTViewModel: ChatGPTViewModel,
-    customLifeCycle: CustomLifecycle,
-    mediaPipeViewModel: MediaPipeViewModel = hiltViewModel(),
+    previewView: PreviewView,
+    customLifecycle: CustomLifecycle,
+    mediaPipeViewModel: MediaPipeViewModel,
 ) {
     // 識別結果を格納
     val result = mediaPipeViewModel._result.joinToString("")
 
     // ChatGPTからの返答が格納
     val content = chatGPTViewModel.getContent()
-
 
     Scaffold(
         floatingActionButton = {
@@ -62,10 +66,10 @@ fun TranslationScreen (
                     if (mediaPipeViewModel.flag) {
                         mediaPipeViewModel.clear()
                         chatGPTViewModel.clear()
-                        customLifeCycle.doStart()
+                        customLifecycle.doStart()
                     }
                     else {
-                        customLifeCycle.doPause()
+                        customLifecycle.doPause()
                         if (result !== "") chatGPTViewModel.chat(result)
                     }
                 },
@@ -89,14 +93,21 @@ fun TranslationScreen (
             }
         }
     ) { paddingValue ->
-        Box() {
+        Box(
+            modifier = Modifier.background(color = Color(140, 171, 216))
+        ) {
             Column(
                 modifier = Modifier.padding(paddingValue),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(10.dp))
-                CameraPreview(
-                    customLifeCycle = customLifeCycle,
+                Spacer(modifier = Modifier.height(10.dp).background(color = Color.Black))
+
+                // Composable関数内で従来のAndroidビューの作成と表示をする
+                AndroidView(
+                    // Androidビューの作成をする
+                    factory = { context ->
+                        return@AndroidView previewView
+                    },
                     modifier = Modifier
                         .fillMaxWidth()                         // 幅を画面全体に設定
                         .padding(start = 10.dp, end = 10.dp)    // 画面の幅から左右10.dpずつ間隔を開ける
@@ -136,8 +147,8 @@ fun TranslationScreen (
                     onClick = {
                         mediaPipeViewModel.clear()
                         chatGPTViewModel.clear()
-                        customLifeCycle.doPause()
-                        chatGPTViewModel.setContent(content)
+                        customLifecycle.doPause()
+                        if (content != "" && content != "error: timeout")chatGPTViewModel.setContent(content)
                         navController.navigate(ScreenRoute.LogScreen.route)
                     }
                 ) {

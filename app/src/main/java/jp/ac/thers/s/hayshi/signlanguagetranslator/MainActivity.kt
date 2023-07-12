@@ -42,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import jp.ac.thers.s.hayshi.signlanguagetranslator.chat_gpt.ChatGPTViewModel
 import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.CustomLifecycle
+import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.MediaPipeViewModel
 import jp.ac.thers.s.hayshi.signlanguagetranslator.presentation.LogScreen
 import jp.ac.thers.s.hayshi.signlanguagetranslator.presentation.TranslationScreen
 import jp.ac.thers.s.hayshi.signlanguagetranslator.ui.theme.SignLanguageTranslatorTheme
@@ -49,9 +50,14 @@ import jp.ac.thers.s.hayshi.signlanguagetranslator.ui.theme.SignLanguageTranslat
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val sharedViewModel: ChatGPTViewModel by viewModels()
+    private val mediaPipeViewModel: MediaPipeViewModel by viewModels()
     private val customLifecycle = CustomLifecycle()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val camera: Camera = Camera(this, mediaPipeViewModel, customLifecycle)
+
         setContent {
             SignLanguageTranslatorTheme {
                 // A surface container using the 'background' color from the theme
@@ -66,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         // 翻訳画面
                         composable(route = ScreenRoute.TranslationScreen.route) {
-                            TranslationScreen(navController, sharedViewModel, customLifecycle)
+                            TranslationScreen(navController, sharedViewModel, camera.previewView, customLifecycle, mediaPipeViewModel)
                         }
 
                         // 過去の翻訳結果表示画面

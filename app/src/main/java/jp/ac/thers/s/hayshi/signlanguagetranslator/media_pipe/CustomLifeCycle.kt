@@ -8,6 +8,7 @@ package jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.camera.core.CameraProvider // 追加
 
 class CustomLifecycle : LifecycleOwner {
     private val lifecycleRegistry: LifecycleRegistry

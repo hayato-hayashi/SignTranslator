@@ -51,19 +51,18 @@ class MediaPipeViewModel @Inject constructor() : ViewModel() {
                 val categoryName = category.categoryName()
 
                 // 同じ手を7回識別すると画面に表示される
-                if (categoryName !== "none") {
-                    if (this.result !== "") {
-                        if (this.result == categoryName) {
-                            count++
-                            System.out.println("count: ${count}, result: ${this.result}")
-                        } else {
-                            count = 0
-                            this.result = ""
-                        }
+                if (this.result != "") {
+                    if (this.result == categoryName) {
+                        count++
+                        System.out.println("count: ${count}, result: ${this.result}")
                     } else {
-                        this.result = categoryName
-                    }
+                        count = 0
+                        this.result = ""
+                        }
+                } else {
+                    if (categoryName != "none") this.result = categoryName
                 }
+
                 if (count >= 7) {
                     _result = _result.plus(this.result)
                     count = 0
