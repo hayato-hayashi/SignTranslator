@@ -28,9 +28,6 @@ class MediaPipeViewModel @Inject constructor() : ViewModel() {
     // 同じ手を何回出したかを記録するための変数
     var count: Int = 0
 
-    // エラー内容を格納する
-    var error by mutableStateOf("")
-
     // ジェスチャー検出をするモデル
     private var gestureRecognizer: MediaPipe? = null
 
@@ -74,7 +71,7 @@ class MediaPipeViewModel @Inject constructor() : ViewModel() {
 
     // 識別中にエラーが発生すると実行される
     private fun returnLiveStreamError(error: RuntimeException) {
-        this.error = error.toString()
+        error.printStackTrace()
     }
 
     // 識別を実行する

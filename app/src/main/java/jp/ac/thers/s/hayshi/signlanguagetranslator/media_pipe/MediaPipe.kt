@@ -91,11 +91,12 @@ class MediaPipe(
             // モデルの作成
             gestureRecognizer = GestureRecognizer.createFromOptions(context, options)
         } catch (e: Error) {
+            System.out.println("setupGestureRecognizer")
             e.printStackTrace()
         }
     }
 
-    fun recognizeLiveStream (
+    fun recognizeLiveStream(
         // ImageProxyはCameraXライブラリで使用されるクラス
         // カメラから得られたフレーム画像へのアクセスができる
         imageProxy: ImageProxy,
@@ -104,14 +105,9 @@ class MediaPipe(
         val frameTime = SystemClock.uptimeMillis()
 
         // imageProxyと同じサイズの空のビットマップを作成
-        val bitmapBuffer = Bitmap.createBitmap(
+        var bitmapBuffer = Bitmap.createBitmap(
             imageProxy.width, imageProxy.height, Bitmap.Config.ARGB_8888
         )
-
-        // カメラを一時停止するとサイズが異なるといったエラーがでることがあるのでそのときは関数を終了させる
-        if (bitmapBuffer.width != imageProxy.width || bitmapBuffer.height != imageProxy.height) {
-            return
-        }
 
         // imageProxyに格納されているフレーム画像データをbitmapBufferにコピーした
         imageProxy.use { bitmapBuffer.copyPixelsFromBuffer(imageProxy.planes[0].buffer) }

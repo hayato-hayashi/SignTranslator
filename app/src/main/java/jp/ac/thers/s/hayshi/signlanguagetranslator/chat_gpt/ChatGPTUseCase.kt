@@ -22,7 +22,6 @@ package jp.ac.thers.s.hayshi.signlanguagetranslator.chat_gpt
 
 import jp.ac.thers.s.hayshi.signlanguagetranslator.api.ChatGPTApi
 import jp.ac.thers.s.hayshi.signlanguagetranslator.api.ChatGPTRequestData
-import jp.ac.thers.s.hayshi.signlanguagetranslator.common.NetworkResponse
 import jp.ac.thers.s.hayshi.signlanguagetranslator.response.toContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -40,6 +39,8 @@ class ChatGptUseCase @Inject constructor(
             // データを送信
             emit(chat)
         } catch (e: Exception) {
+            System.out.println("ChatGPTUseCase")
+            e.printStackTrace()
             val error = e.message.toString()
             emit(listOf("error: ", error))
         }

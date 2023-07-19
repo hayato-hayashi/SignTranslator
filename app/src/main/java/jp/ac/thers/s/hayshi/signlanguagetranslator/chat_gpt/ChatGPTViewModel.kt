@@ -13,7 +13,6 @@ viewModelScope内でflowを実行して、非同期の処理を実行する
 
 package jp.ac.thers.s.hayshi.signlanguagetranslator.chat_gpt
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,7 +20,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.ac.thers.s.hayshi.signlanguagetranslator.api.ChatGPTRequestData
-import jp.ac.thers.s.hayshi.signlanguagetranslator.common.NetworkResponse
 import jp.ac.thers.s.hayshi.signlanguagetranslator.response.Message
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

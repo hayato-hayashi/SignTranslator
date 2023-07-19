@@ -100,7 +100,7 @@ fun TranslationScreen (
                 modifier = Modifier.padding(paddingValue),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(10.dp).background(color = Color.Black))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Composable関数内で従来のAndroidビューの作成と表示をする
                 AndroidView(
@@ -110,9 +110,9 @@ fun TranslationScreen (
                     },
                     modifier = Modifier
                         .fillMaxWidth()                         // 幅を画面全体に設定
-                        .padding(start = 10.dp, end = 10.dp)    // 画面の幅から左右10.dpずつ間隔を開ける
+//                        .padding(start = 10.dp, end = 10.dp)    // 画面の幅から左右10.dpずつ間隔を開ける
                         .weight(2f)                             // 高さを設定
-                        .clip(RoundedCornerShape(16.dp))
+//                        .clip(RoundedCornerShape(16.dp))
                 )
                 Spacer(modifier = Modifier.height(15.dp))
 
@@ -122,7 +122,7 @@ fun TranslationScreen (
                         .fillMaxWidth()
                         .weight(1f)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(color = Color.Gray)
+                        .background(color = Color.White)
                 ) {
                     if (chatGPTViewModel.isLoading) {
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
