@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val camera: Camera = Camera(this, mediaPipeViewModel, customLifecycle)
+        val camera: Camera = Camera(this, mediaPipeViewModel)
 
         setContent {
             SignLanguageTranslatorTheme {
@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         // 翻訳画面
                         composable(route = ScreenRoute.TranslationScreen.route) {
-                            TranslationScreen(navController, sharedViewModel, camera.previewView, customLifecycle, mediaPipeViewModel)
+                            TranslationScreen(navController, sharedViewModel, camera, mediaPipeViewModel)
                         }
 
                         // 過去の翻訳結果表示画面

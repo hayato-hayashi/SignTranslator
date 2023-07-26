@@ -38,6 +38,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import jp.ac.thers.s.hayshi.signlanguagetranslator.Camera
 import jp.ac.thers.s.hayshi.signlanguagetranslator.R
 import jp.ac.thers.s.hayshi.signlanguagetranslator.ScreenRoute
 import jp.ac.thers.s.hayshi.signlanguagetranslator.chat_gpt.ChatGPTViewModel
@@ -48,8 +49,9 @@ import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.MediaPipeViewModel
 fun TranslationScreen (
     navController: NavController,
     chatGPTViewModel: ChatGPTViewModel,
-    previewView: PreviewView,
-    customLifecycle: CustomLifecycle,
+//    previewView: PreviewView,
+//    customLifecycle: CustomLifecycle,
+    camera: Camera,
     mediaPipeViewModel: MediaPipeViewModel,
 ) {
     // 識別結果を格納
@@ -66,10 +68,14 @@ fun TranslationScreen (
                     if (mediaPipeViewModel.flag) {
                         mediaPipeViewModel.clear()
                         chatGPTViewModel.clear()
-                        customLifecycle.doStart()
+//                        customLifecycle.doStart()
+                        camera.resumePreview()
+                        camera.resumeImageAnalysis()
                     }
                     else {
-                        customLifecycle.doPause()
+//                        customLifecycle.doPause()
+                        camera.pauseImageAnalysis()
+                        camera.pausePreview()
                         if (result !== "") chatGPTViewModel.chat(result)
                     }
                 },
@@ -106,7 +112,7 @@ fun TranslationScreen (
                 AndroidView(
                     // Androidビューの作成をする
                     factory = { context ->
-                        return@AndroidView previewView
+                        return@AndroidView camera.previewView
                     },
                     modifier = Modifier
                         .fillMaxWidth()                         // 幅を画面全体に設定
@@ -147,8 +153,10 @@ fun TranslationScreen (
                     onClick = {
                         mediaPipeViewModel.clear()
                         chatGPTViewModel.clear()
-                        customLifecycle.doPause()
-                        if (content != "" && content != "error: timeout")chatGPTViewModel.setContent(content)
+//                        customLifecycle.doPause()
+                        camera.pauseImageAnalysis()
+                        camera.pausePreview()
+                        if (content != "" && "error" !in content)chatGPTViewModel.setContent(content)
                         navController.navigate(ScreenRoute.LogScreen.route)
                     }
                 ) {

@@ -52,10 +52,11 @@ class MediaPipeViewModel @Inject constructor() : ViewModel() {
                     if (this.result == categoryName) {
                         count++
                         System.out.println("count: ${count}, result: ${this.result}")
-                    } else {
+                    } else if (categoryName == "none")
+                    else {
                         count = 0
                         this.result = ""
-                        }
+                    }
                 } else {
                     if (categoryName != "none") this.result = categoryName
                 }

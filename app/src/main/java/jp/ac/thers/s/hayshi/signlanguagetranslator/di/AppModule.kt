@@ -13,6 +13,7 @@ https://developer.android.com/training/dependency-injection/hilt-android?hl=ja#h
 /*=========================================================================================
 Retrofit.Builder()               : Retrofitの設定を開始する
 .baseUrl()                       : APIのベースURLを設定する
+.client()                        : API通信の細かい設定をする
 .addConverterFactory()           : 通信の結果のJsonデータをどのように変換するか設定する
 MoshiConverterFactory.create()   : 入力データがJsonであると設定
 .add(KotlinJsonAdapterFactory()) : 出力データがKotlinであると設定
@@ -30,8 +31,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import jp.ac.thers.s.hayshi.signlanguagetranslator.api.ChatGPTApi
 import jp.ac.thers.s.hayshi.signlanguagetranslator.common.Constants.BASE_URL
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -43,6 +46,13 @@ object AppModule {
     fun provideChatGPTApi(): ChatGPTApi {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(
+                OkHttpClient.Builder()
+                    .connectTimeout(30, TimeUnit.SECONDS) // 接続タイムアウト時間を設定 (30秒)
+                    .readTimeout(30, TimeUnit.SECONDS) // 読み取りタイムアウト時間を設定 (30秒)
+                    .writeTimeout(30, TimeUnit.SECONDS) // 書き込みタイムアウト時間を設定 (30秒)
+                    .build()
+            )
             .addConverterFactory(
                 MoshiConverterFactory.create(
                     Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
