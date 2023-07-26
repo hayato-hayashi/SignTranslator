@@ -93,9 +93,9 @@ class Camera(
                 val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
                 // CameraSelectorはカメラの設定をするオブジェクト
-                // 背面カメラの使用はCameraSelector.LENS_FACING_BACK
+                // 前面カメラの使用はCameraSelector.LENS_FACING_FRONT
                 val cameraSelector: CameraSelector = CameraSelector.Builder()
-                    .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
+                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                     .build()
 
                 // .bindToLifecycleは指定したライフサイクルに合わせてカメラとプレビューの開始と停止を自動的に処理する

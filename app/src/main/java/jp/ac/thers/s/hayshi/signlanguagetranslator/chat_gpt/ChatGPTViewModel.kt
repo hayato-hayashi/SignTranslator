@@ -40,7 +40,16 @@ class ChatGPTViewModel @Inject constructor(
     private var model = "gpt-3.5-turbo"
 
     // chatGPTが返答をする際の設定を記述
-    private var message = Message(role = "system", content = "正しい日本語に変換してください")
+    private var message = Message(role = "system", content = "文章は以下のような特徴を持っている可能性があります\n" +
+            "・「の」、「も」、「り」、「を」、「ん」がない文章\n" +
+            "・「お」が「ろ」と間違って変換されている\n" +
+            "・伸ばし棒がなく、「こーす」が「こうす」のように表現されている\n" +
+            "・濁音、半濁音がなく、かわりに「が」を「か」のように表現されている\n" +
+            "・拗音がなく、かわりに「しょ」が「しよ」のように表現されている\n" +
+            "以下の文章に文字を補完して、正しい言葉に変換してください\n" +
+            "変換が必要ない文章である場合は、そのまま表示してください\n" +
+            "\n" +
+            "例 きふたいかく　ぎふだいがく\n")
 
     // chatGPTに聞きたい内容をcontentに記述する
     private var message2: Message = Message(role = "user", content = "")
