@@ -41,7 +41,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import jp.ac.thers.s.hayshi.signlanguagetranslator.chat_gpt.ChatGPTViewModel
-import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.CustomLifecycle
 import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.MediaPipeViewModel
 import jp.ac.thers.s.hayshi.signlanguagetranslator.presentation.LogScreen
 import jp.ac.thers.s.hayshi.signlanguagetranslator.presentation.TranslationScreen
@@ -51,7 +50,6 @@ import jp.ac.thers.s.hayshi.signlanguagetranslator.ui.theme.SignLanguageTranslat
 class MainActivity : ComponentActivity() {
     private val sharedViewModel: ChatGPTViewModel by viewModels()
     private val mediaPipeViewModel: MediaPipeViewModel by viewModels()
-    private val customLifecycle = CustomLifecycle()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

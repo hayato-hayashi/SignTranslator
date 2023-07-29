@@ -3,24 +3,25 @@ FABを押すとMediaPipeによる識別が開始される
 識別中は識別された文を画面に表示する
 もう一度FABを押すと識別が停止して、識別した文をChatGPTになげる
 APIの通信が終わると返答を画面に出力する
-============================================================*/
+===========================================================*/
 
-/*=============================================================
+/*===========================================================
 marginとpaddingの指定方法
 Kotlinにはmarginを指定するmodifierがないのでpadding()で代用する
 
 コンポーネントの大きさを指定する前のpadding -> marginとして機能
 コンポーネントの大きさを指定した後のpadding -> paddingとして機能
 上のような認識でmarginとpaddingを指定する
-=============================================================*/
 
-/*================================================================
+このように、modifierを設定する順番によって表示が変わるのでそこに注意する
+===========================================================*/
+
+/*===========================================================
 AndroidViewについて
 https://note.com/masato1230/n/na09514fe5698
-===============================================================*/
+===========================================================*/
 package jp.ac.thers.s.hayshi.signlanguagetranslator.presentation
 
-import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,15 +43,12 @@ import jp.ac.thers.s.hayshi.signlanguagetranslator.Camera
 import jp.ac.thers.s.hayshi.signlanguagetranslator.R
 import jp.ac.thers.s.hayshi.signlanguagetranslator.ScreenRoute
 import jp.ac.thers.s.hayshi.signlanguagetranslator.chat_gpt.ChatGPTViewModel
-import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.CustomLifecycle
 import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.MediaPipeViewModel
 
 @Composable
 fun TranslationScreen (
     navController: NavController,
     chatGPTViewModel: ChatGPTViewModel,
-//    previewView: PreviewView,
-//    customLifecycle: CustomLifecycle,
     camera: Camera,
     mediaPipeViewModel: MediaPipeViewModel,
 ) {

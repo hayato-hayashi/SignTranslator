@@ -1,7 +1,3 @@
-/*
-modifierを設定する順番によって表示が変わるので、そこに注意する
-*/
-
 package jp.ac.thers.s.hayshi.signlanguagetranslator.presentation
 
 import androidx.compose.foundation.background

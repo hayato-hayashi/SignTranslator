@@ -1,7 +1,9 @@
-/*
+/*============================================================
 CameraXについて
 https://developer.android.com/training/camerax?hl=ja
-*/
+
+カメラの使用権限は手動で行わなければいけない
+==============================================================*/
 
 package jp.ac.thers.s.hayshi.signlanguagetranslator
 
@@ -14,14 +16,12 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.CustomLifecycle
 import jp.ac.thers.s.hayshi.signlanguagetranslator.media_pipe.MediaPipeViewModel
 import java.util.concurrent.Executors
 
 class Camera(
     val context: Context,
     val viewModel: MediaPipeViewModel,
-//    val customLifecycle: CustomLifecycle,
 ) {
     lateinit var previewView: PreviewView
     lateinit var camera: Camera

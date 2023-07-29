@@ -4,6 +4,7 @@ https://developers.google.com/mediapipe/solutions/vision/gesture_recognizer
 
 Sample
 https://github.com/googlesamples/mediapipe/tree/main/examples/gesture_recognizer/android/app/src/main/java/com/google/mediapipe/examples/gesturerecognizer
+
 モデルの設定
 setMinHandDetectionConfidence
 検出の信頼度スコアの最低値を設定して、これより高い信頼度の場合検出成功
